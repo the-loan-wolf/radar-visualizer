@@ -18,6 +18,9 @@ const SWEEP_LINE_THICKNESS: f32 = 4.0;
 const SWEEP_SPREAD_DEG: f32 = 3.0;
 const SWEEP_STEP_DEG: f32 = 0.3;
 
+// This happens at COMPILE time, putting the text inside your EXE
+const SHADER_SOURCE: &str = include_str!("../shaders/radar_phosphor.fs");
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -77,7 +80,7 @@ fn main() {
     }
 
     // ---- Shader and Render Texture ----
-    let mut shaders = rl.load_shader(&thread, None, Some("shaders/radar_phosphor.fs"));
+    let mut shaders = rl.load_shader_from_memory(&thread, None, Some(SHADER_SOURCE));
     let intensity_loc = shaders.get_shader_location("intensity");
     shaders.set_shader_value(intensity_loc, 1.5f32);
 
