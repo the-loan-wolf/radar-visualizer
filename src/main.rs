@@ -205,10 +205,22 @@ fn main() {
             }
 
             if data_received {
+                // Determine the direction of the Beam Animation trail
+                static mut LAST_ANGLE: f32 = 0.0;
+
+                let direction = unsafe {
+                    let d = if i_angle < LAST_ANGLE {
+                        1.0 // Moving clockwise (or one way)
+                    } else {
+                        -1.0 // Moving counter-clockwise (or the other)
+                    };
+                    LAST_ANGLE = i_angle;
+                    d // return d from the unsafe block
+                };
                 // Sweep Line
                 let mut offset = -SWEEP_SPREAD_DEG;
                 while offset <= 0.0 {
-                    let a = (i_angle + offset).to_radians();
+                    let a = (i_angle + offset * direction).to_radians();
                     let sweep_end = Vector2::new(
                         radar_center.x + radar_radius * a.cos(),
                         radar_center.y - radar_radius * a.sin(),
@@ -223,8 +235,8 @@ fn main() {
                 }
 
                 // Detected Object
-                let rad = i_angle.to_radians();
                 if i_distance > 0.0 && i_distance < MAX_RANGE_CM {
+                    let rad = i_angle.to_radians();
                     let pixels_per_cm = radar_radius / MAX_RANGE_CM;
                     let pix_dist = i_distance * pixels_per_cm;
 
