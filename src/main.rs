@@ -99,6 +99,7 @@ fn main() {
     let mut i_distance = 0.0f32;
     let mut use_shader = true;
     let mut data_received = false;
+    let mut last_angle: f32 = 0.0;
 
     while !rl.window_should_close() {
         // ---- Input ----
@@ -206,20 +207,12 @@ fn main() {
 
             if data_received {
                 // Determine the direction of the Beam Animation trail
-                // NOTE: Below codes are unsafe only in multi-threaded
-                // application. This application is tiny and single threaded so,
-                // no race condition is going to happen here, It's totally safe
-                static mut LAST_ANGLE: f32 = 0.0;
-
-                let direction = unsafe {
-                    let d = if i_angle < LAST_ANGLE {
-                        1.0 // Moving clockwise
-                    } else {
-                        -1.0 // Moving counter-clockwise
-                    };
-                    LAST_ANGLE = i_angle;
-                    d // return d from the unsafe block
+                let direction = if i_angle < last_angle {
+                    1.0 // Moving clockwise
+                } else {
+                    -1.0 // Moving counter-clockwise
                 };
+                last_angle = i_angle;
 
                 // Sweep Line
                 let mut offset = -SWEEP_SPREAD_DEG;
