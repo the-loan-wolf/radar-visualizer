@@ -213,13 +213,14 @@ fn main() {
 
                 let direction = unsafe {
                     let d = if i_angle < LAST_ANGLE {
-                        1.0 // Moving clockwise (or one way)
+                        1.0 // Moving clockwise
                     } else {
-                        -1.0 // Moving counter-clockwise (or the other)
+                        -1.0 // Moving counter-clockwise
                     };
                     LAST_ANGLE = i_angle;
                     d // return d from the unsafe block
                 };
+
                 // Sweep Line
                 let mut offset = -SWEEP_SPREAD_DEG;
                 while offset <= 0.0 {
