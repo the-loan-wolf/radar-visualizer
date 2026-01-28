@@ -206,6 +206,9 @@ fn main() {
 
             if data_received {
                 // Determine the direction of the Beam Animation trail
+                // NOTE: Below codes are unsafe only in multi-threaded
+                // application. This application is tiny and single threaded so,
+                // no race condition is going to happen here, It's totally safe
                 static mut LAST_ANGLE: f32 = 0.0;
 
                 let direction = unsafe {
